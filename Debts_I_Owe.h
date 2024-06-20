@@ -13,29 +13,22 @@ namespace DebtManagerApp {
     using namespace System::Drawing;
     using namespace System::Collections::Generic;
 
-    public ref class Debts_I_Owe : public System::Windows::Forms::Form
+    public ref class DebtsIOwe : public System::Windows::Forms::Form
     {
     public:
-        Debts_I_Owe(void)
+        DebtsIOwe(void)
         {
             InitializeComponent();
             Load_exist_debt();
             flowLayoutPanel->AutoScroll = true;
+            this->WindowState = FormWindowState::Maximized;
         }
     private: System::Windows::Forms::Button^ add_debt_i;
     private: System::Windows::Forms::FlowLayoutPanel^ flowLayoutPanel;
     private: System::Windows::Forms::Button^ backButton;
     private: System::Windows::Forms::Label^ initialDebtAmountLabel;
     private: System::Windows::Forms::Panel^ panel1;
-
-    private: System::Windows::Forms::Label^ DebtTotalAmountLabel;
     private: System::Windows::Forms::Label^ AllDebtsAmount;
-
-
-
-
-
-
 
 
 
@@ -46,7 +39,7 @@ namespace DebtManagerApp {
         static bool isOpen = false;
 
     protected:
-        ~Debts_I_Owe()
+        ~DebtsIOwe()
         {
             if (components)
             {
@@ -60,11 +53,11 @@ namespace DebtManagerApp {
 #pragma region Windows Form Designer generated code
         void InitializeComponent(void)
         {
+            System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(DebtsIOwe::typeid));
             this->add_debt_i = (gcnew System::Windows::Forms::Button());
             this->flowLayoutPanel = (gcnew System::Windows::Forms::FlowLayoutPanel());
             this->backButton = (gcnew System::Windows::Forms::Button());
             this->panel1 = (gcnew System::Windows::Forms::Panel());
-            this->DebtTotalAmountLabel = (gcnew System::Windows::Forms::Label());
             this->AllDebtsAmount = (gcnew System::Windows::Forms::Label());
             this->SuspendLayout();
             // 
@@ -81,14 +74,15 @@ namespace DebtManagerApp {
             this->add_debt_i->TabIndex = 0;
             this->add_debt_i->Text = L"Add debt";
             this->add_debt_i->UseVisualStyleBackColor = false;
-            this->add_debt_i->Click += gcnew System::EventHandler(this, &Debts_I_Owe::add_debt_i_Click);
+            this->add_debt_i->Click += gcnew System::EventHandler(this, &DebtsIOwe::add_debt_i_Click);
             // 
             // flowLayoutPanel
             // 
+            this->flowLayoutPanel->BackColor = System::Drawing::Color::Transparent;
             this->flowLayoutPanel->Location = System::Drawing::Point(344, 127);
             this->flowLayoutPanel->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
             this->flowLayoutPanel->Name = L"flowLayoutPanel";
-            this->flowLayoutPanel->Size = System::Drawing::Size(1269, 862);
+            this->flowLayoutPanel->Size = System::Drawing::Size(1397, 800);
             this->flowLayoutPanel->TabIndex = 1;
             // 
             // backButton
@@ -104,7 +98,7 @@ namespace DebtManagerApp {
             this->backButton->TabIndex = 2;
             this->backButton->Text = L"Back To Menu";
             this->backButton->UseVisualStyleBackColor = false;
-            this->backButton->Click += gcnew System::EventHandler(this, &Debts_I_Owe::backButton_Click);
+            this->backButton->Click += gcnew System::EventHandler(this, &DebtsIOwe::backButton_Click);
             // 
             // panel1
             // 
@@ -115,41 +109,38 @@ namespace DebtManagerApp {
             this->panel1->Size = System::Drawing::Size(2483, 100);
             this->panel1->TabIndex = 3;
             // 
-            // DebtTotalAmountLabel
-            // 
-            this->DebtTotalAmountLabel->AutoSize = true;
-            this->DebtTotalAmountLabel->Font = (gcnew System::Drawing::Font(L"Mongolian Baiti", 28.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(0)));
-            this->DebtTotalAmountLabel->Location = System::Drawing::Point(139, 384);
-            this->DebtTotalAmountLabel->Name = L"DebtTotalAmountLabel";
-            this->DebtTotalAmountLabel->Size = System::Drawing::Size(0, 50);
-            this->DebtTotalAmountLabel->TabIndex = 5;
-            // 
             // AllDebtsAmount
             // 
             this->AllDebtsAmount->AutoSize = true;
-            this->AllDebtsAmount->Location = System::Drawing::Point(120, 411);
+            this->AllDebtsAmount->BackColor = System::Drawing::Color::Transparent;
+            this->AllDebtsAmount->Font = (gcnew System::Drawing::Font(L"Mongolian Baiti", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(0)));
+            this->AllDebtsAmount->ForeColor = System::Drawing::Color::Black;
+            this->AllDebtsAmount->Location = System::Drawing::Point(26, 460);
             this->AllDebtsAmount->Name = L"AllDebtsAmount";
-            this->AllDebtsAmount->Size = System::Drawing::Size(0, 16);
-            this->AllDebtsAmount->TabIndex = 6;
+            this->AllDebtsAmount->Size = System::Drawing::Size(92, 31);
+            this->AllDebtsAmount->TabIndex = 4;
+            this->AllDebtsAmount->Text = L"label1";
+            this->AllDebtsAmount->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
             // 
-            // Debts_I_Owe
+            // DebtsIOwe
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->BackColor = System::Drawing::Color::Honeydew;
+            this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
             this->ClientSize = System::Drawing::Size(1924, 886);
             this->Controls->Add(this->AllDebtsAmount);
-            this->Controls->Add(this->DebtTotalAmountLabel);
             this->Controls->Add(this->panel1);
             this->Controls->Add(this->backButton);
             this->Controls->Add(this->flowLayoutPanel);
             this->Controls->Add(this->add_debt_i);
+            this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
             this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
-            this->Name = L"Debts_I_Owe";
+            this->Name = L"DebtsIOwe";
             this->Text = L"Debts I Owe";
-            this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &Debts_I_Owe::Debts_I_Owe_FormClosing);
-            this->Load += gcnew System::EventHandler(this, &Debts_I_Owe::Debts_I_Owe_Load);
+            this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &DebtsIOwe::Debts_I_Owe_FormClosing);
+            this->Load += gcnew System::EventHandler(this, &DebtsIOwe::Debts_I_Owe_Load);
             this->ResumeLayout(false);
             this->PerformLayout();
 
@@ -189,7 +180,7 @@ namespace DebtManagerApp {
         TextBox^ textAmount = gcnew TextBox();
         textAmount->Location = System::Drawing::Point(330, 15);
         textAmount->Size = System::Drawing::Size(100, 30);
-        textAmount->KeyPress += gcnew KeyPressEventHandler(this, &Debts_I_Owe::textAmount_KeyPress);
+        textAmount->KeyPress += gcnew KeyPressEventHandler(this, &DebtsIOwe::textAmount_KeyPress);
         textAmount->Text = debtAmount;
         textAmount->Font = gcnew System::Drawing::Font("Bookman Old Style", 11);
 
@@ -200,7 +191,7 @@ namespace DebtManagerApp {
         save->Font = gcnew System::Drawing::Font("Bookman Old Style", 10, System::Drawing::FontStyle::Bold);
         save->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
         save->BackColor = System::Drawing::Color::LimeGreen;
-        save->Click += gcnew System::EventHandler(this, &Debts_I_Owe::save_Click);
+        save->Click += gcnew System::EventHandler(this, &DebtsIOwe::save_Click);
 
         Button^ del = gcnew Button();
         del->Location = System::Drawing::Point(200, 50);
@@ -209,7 +200,7 @@ namespace DebtManagerApp {
         del->Font = gcnew System::Drawing::Font("Bookman Old Style", 10, System::Drawing::FontStyle::Bold);
         del->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
         del->BackColor = System::Drawing::Color::LimeGreen;
-        del->Click += gcnew System::EventHandler(this, &Debts_I_Owe::delete_Click);
+        del->Click += gcnew System::EventHandler(this, &DebtsIOwe::delete_Click);
 
         Button^ more = gcnew Button();
         more->Location = System::Drawing::Point(310, 50);
@@ -218,7 +209,7 @@ namespace DebtManagerApp {
         more->Font = gcnew System::Drawing::Font("Bookman Old Style", 10, System::Drawing::FontStyle::Bold);
         more->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
         more->BackColor = System::Drawing::Color::LimeGreen;
-        more->Click += gcnew System::EventHandler(this, &Debts_I_Owe::more_Click);
+        more->Click += gcnew System::EventHandler(this, &DebtsIOwe::more_Click);
 
         newPanel->Controls->Add(name);
         newPanel->Controls->Add(textName);
@@ -352,6 +343,8 @@ namespace DebtManagerApp {
         catch (Exception^ ex) {
             MessageBox::Show("Error saving data: " + ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
         }
+
+        updateAllDebtsAmount();
     }
     private: System::Void delete_Click(System::Object^ sender, System::EventArgs^ e) {
 
@@ -397,12 +390,16 @@ namespace DebtManagerApp {
         {
             MessageBox::Show("Error deleting data: " + ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
         }
+
+        updateAllDebtsAmount();
     }
     private: void DebtDetails(String^ debtName) {
         System::Windows::Forms::Form^ detailsForm = gcnew System::Windows::Forms::Form();
         detailsForm->Text = "Debt Details";
         detailsForm->BackColor = System::Drawing::Color::Honeydew;
+        detailsForm->BackgroundImage = System::Drawing::Image::FromFile("seamless-pattern-cartoon-frog-cute-wallpaper-for-kids-gift-wrap-paper-vector.jpg");
         detailsForm->Size = System::Drawing::Size(500, 650);
+        detailsForm->Icon = gcnew System::Drawing::Icon("10384161.ico");
 
         System::Windows::Forms::ListBox^ listDetails = gcnew System::Windows::Forms::ListBox();
         listDetails->Dock = System::Windows::Forms::DockStyle::Top;
@@ -482,7 +479,7 @@ namespace DebtManagerApp {
         addPayment->Font = gcnew System::Drawing::Font("Bookman Old Style", 10, System::Drawing::FontStyle::Bold);
         addPayment->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
         addPayment->BackColor = System::Drawing::Color::LimeGreen;
-        addPayment->Click += gcnew System::EventHandler(this, &Debts_I_Owe::addPayment_Click);
+        addPayment->Click += gcnew System::EventHandler(this, &DebtsIOwe::addPayment_Click);
 
         detailsForm->Controls->Add(newPayment);
         detailsForm->Controls->Add(PaymentDate);
@@ -496,7 +493,7 @@ namespace DebtManagerApp {
         deletePayment->Font = gcnew System::Drawing::Font("Bookman Old Style", 10, System::Drawing::FontStyle::Bold);
         deletePayment->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
         deletePayment->BackColor = System::Drawing::Color::LimeGreen;
-        deletePayment->Click += gcnew System::EventHandler(this, &Debts_I_Owe::deletePayment_Click);
+        deletePayment->Click += gcnew System::EventHandler(this, &DebtsIOwe::deletePayment_Click);
 
         detailsForm->Controls->Add(deletePayment);
 
@@ -642,12 +639,36 @@ namespace DebtManagerApp {
         this->Hide();
         ShowMainScreen();
     }
-private: System::Void Debts_I_Owe_Load(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void Debts_I_Owe_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
-    e->Cancel = true; 
-    this->Hide(); 
-    ShowMainScreen(); 
-}
+    private: System::Void Debts_I_Owe_Load(System::Object^ sender, System::EventArgs^ e) {
+        updateAllDebtsAmount();
+    }
+    private: System::Void Debts_I_Owe_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+        e->Cancel = true; 
+        this->Hide(); 
+        ShowMainScreen(); 
+    }
+    private: void updateAllDebtsAmount() {
+
+        double debtsTotalAmount = 0.0;
+        
+        try
+        {
+            array<String^>^ lines = System::IO::File::ReadAllLines("debts.csv");
+            for each (String ^ line in lines)
+            {
+                array<String^>^ parts = line->Split(',');
+                if (parts->Length == 2)
+                {
+                    debtsTotalAmount += Convert::ToDouble(parts[1], System::Globalization::CultureInfo::InvariantCulture);
+                }
+            }
+        }
+        catch (Exception^ ex)
+        {
+            MessageBox::Show("Error updating total amount: " + ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        }
+        
+        AllDebtsAmount->Text = "Total debts amount:\n\n" + debtsTotalAmount.ToString(System::Globalization::CultureInfo::InvariantCulture);
+    }
 };
 }
