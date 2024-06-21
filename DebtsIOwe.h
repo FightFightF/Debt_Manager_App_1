@@ -282,44 +282,44 @@ namespace DebtManagerApp {
         try {
             array<String^>^ lines = System::IO::File::ReadAllLines("debts.csv");
             bool found = false;
-            int initialAmount = 0;
-            System::Collections::Generic::List<int>^ payments = gcnew System::Collections::Generic::List<int>();
+            double initialAmount = 0.0;
+            System::Collections::Generic::List<double>^ payments = gcnew System::Collections::Generic::List<double>();
 
             for each (String ^ line in lines) {
                 array<String^>^ parts = line->Split(',');
                 if (parts->Length >= 2 && parts[0] == debtName) {
                     found = true;
-                    initialAmount = Int32::Parse(parts[1]);
+                    initialAmount = Double::Parse(parts[1], System::Globalization::CultureInfo::InvariantCulture);
                     for (int i = 2; i < parts->Length; i++) {
-                        payments->Add(Int32::Parse(parts[i]));
+                        payments->Add(Double::Parse(parts[i], System::Globalization::CultureInfo::InvariantCulture));
                     }
                     break;
                 }
             }
 
-            int newInitialAmount;
+            double newInitialAmount;
             if (found) {
                 newInitialAmount = initialAmount;
             }
             else {
-                newInitialAmount = Int32::Parse(debtAmount);
+                newInitialAmount = Double::Parse(debtAmount, System::Globalization::CultureInfo::InvariantCulture);
             }
 
-            int totalPayments = 0;
-            for each (int payment in payments) {
+            double totalPayments = 0.0;
+            for each (double payment in payments) {
                 totalPayments += payment;
             }
 
-            int newTotalAmount = newInitialAmount - totalPayments;
+            double newTotalAmount = newInitialAmount - totalPayments;
 
             System::Collections::Generic::List<String^>^ updatedLines = gcnew System::Collections::Generic::List<String^>();
             for each (String ^ line in lines) {
                 array<String^>^ parts = line->Split(',');
                 if (parts->Length >= 2) {
                     if (parts[0] == debtName) {
-                        String^ newLine = debtName + "," + newInitialAmount.ToString();
-                        for each (int payment in payments) {
-                            newLine += "," + payment.ToString();
+                        String^ newLine = debtName + "," + newInitialAmount.ToString(System::Globalization::CultureInfo::InvariantCulture);
+                        for each (double payment in payments) {
+                            newLine += "," + payment.ToString(System::Globalization::CultureInfo::InvariantCulture);
                         }
                         updatedLines->Add(newLine);
                     }
@@ -330,7 +330,7 @@ namespace DebtManagerApp {
             }
 
             if (!found) {
-                String^ newLine = debtName + "," + newInitialAmount.ToString();
+                String^ newLine = debtName + "," + newInitialAmount.ToString(System::Globalization::CultureInfo::InvariantCulture);
                 updatedLines->Add(newLine);
             }
 
@@ -338,12 +338,12 @@ namespace DebtManagerApp {
 
             textAmount->ReadOnly = true;
 
-            MessageBox::Show("Debt saved:\nName: " + debtName + "\nAmount: " + newTotalAmount.ToString(), "Save");
+            MessageBox::Show("Debt saved:\nName: " + debtName + "\nAmount: " + newTotalAmount.ToString(System::Globalization::CultureInfo::InvariantCulture), "Save");
         }
         catch (Exception^ ex) {
             MessageBox::Show("Error saving data: " + ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
         }
-
+        
         updateAllDebtsAmount();
     }
     private: System::Void delete_Click(System::Object^ sender, System::EventArgs^ e) {
