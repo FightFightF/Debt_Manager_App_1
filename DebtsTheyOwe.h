@@ -178,7 +178,7 @@ namespace DebtManagerApp {
         textAmount->Location = System::Drawing::Point(330, 15);
         textAmount->Size = System::Drawing::Size(100, 30);
         textAmount->KeyPress += gcnew KeyPressEventHandler(this, &DebtsTheyOwe::textAmount_KeyPress);
-        textAmount->Text = debtAmount;
+        textAmount->Text = !String::IsNullOrEmpty(debtAmount) ? Convert::ToDouble(debtAmount, System::Globalization::CultureInfo::InvariantCulture).ToString("F2", System::Globalization::CultureInfo::InvariantCulture) : "";
         textAmount->Font = gcnew System::Drawing::Font("Bookman Old Style", 11);
 
         Button^ save = gcnew Button();
@@ -259,6 +259,15 @@ namespace DebtManagerApp {
         {
             e->Handled = true;
         }
+
+	if (!Char::IsControl(e->KeyChar) && textBox->Text->IndexOf('.') > -1)
+        {
+            cli::array<String^>^ parts = textBox->Text->Split('.');
+            if (parts->Length > 1 && parts[1]->Length >= 2)
+            {
+                e->Handled = true;
+            }
+        }
     }
     private: System::Void save_Click(System::Object^ sender, System::EventArgs^ e) {
 
@@ -277,6 +286,16 @@ namespace DebtManagerApp {
         }
 
         try {
+            double amount;
+            if (Double::TryParse(debtAmount, System::Globalization::NumberStyles::Float, System::Globalization::CultureInfo::InvariantCulture, amount)) {
+                amount = Math::Round(amount, 2);
+                debtAmount = amount.ToString("F2", System::Globalization::CultureInfo::InvariantCulture);
+            }
+            else {
+                MessageBox::Show("Invalid amount format. Please enter a valid number.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+                return;
+            }
+		
             array<String^>^ lines = System::IO::File::ReadAllLines("debts_they.csv");
             bool found = false;
             double initialAmount = 0.0;
@@ -433,7 +452,7 @@ namespace DebtManagerApp {
         catch (Exception^ ex) {
             MessageBox::Show("Error loading initial debt amount: " + ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
         }
-        initialDebtAmountLabel->Text = "Initial Amount: " + initialDebtAmount.ToString(System::Globalization::CultureInfo::InvariantCulture);
+        initialDebtAmountLabel->Text = "Initial Amount: " + initialDebtAmount.ToString("F2", System::Globalization::CultureInfo::InvariantCulture);
 
         if (!System::IO::File::Exists("details_they.csv")) {
             MessageBox::Show("No details found for this debt.", "Information", MessageBoxButtons::OK, MessageBoxIcon::Information);
@@ -453,7 +472,7 @@ namespace DebtManagerApp {
                     listDetails->Items->Add("Date: " + date + ", Amount: " + amount);
                 }
             }
-            totalAmountLabel->Text = "Total Amount: " + totalAmount.ToString(System::Globalization::CultureInfo::InvariantCulture);
+            totalAmountLabel->Text = "Total Amount: " + totalAmount.ToString("F2", System::Globalization::CultureInfo::InvariantCulture);
         }
         catch (Exception^ ex) {
             MessageBox::Show("Error loading details: " + ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
@@ -463,6 +482,7 @@ namespace DebtManagerApp {
         newPayment->Location = System::Drawing::Point(10, 540);
         newPayment->Size = System::Drawing::Size(100, 23);
         newPayment->Font = gcnew System::Drawing::Font("Bookman Old Style", 11);
+        newPayment->KeyPress += gcnew KeyPressEventHandler(this, &DebtsTheyOwe::textAmount_KeyPress);
 
         DateTimePicker^ PaymentDate = gcnew DateTimePicker();
         PaymentDate->Format = DateTimePickerFormat::Short;
@@ -517,15 +537,35 @@ namespace DebtManagerApp {
         }
 
         double payment;
-        try {
-            payment = Convert::ToDouble(paymentAmount, System::Globalization::CultureInfo::InvariantCulture);
+        if (Double::TryParse(paymentAmount, System::Globalization::NumberStyles::Float, System::Globalization::CultureInfo::InvariantCulture, payment)) {
+            payment = Math::Round(payment, 2);
+            paymentAmount = payment.ToString("F2", System::Globalization::CultureInfo::InvariantCulture);
         }
-        catch (FormatException^) {
-            MessageBox::Show("Please enter a valid amount.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        else {
+            MessageBox::Show("Invalid amount format. Please enter a valid number.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
             return;
         }
 
         try {
+            array<String^>^ debtLines = System::IO::File::ReadAllLines("debts_they.csv");
+            bool debtFound = false;
+            for (int i = 0; i < debtLines->Length; i++) {
+                array<String^>^ parts = debtLines[i]->Split(',');
+                if (parts->Length == 2 && parts[0] == debtName) {
+                    double currentAmount = Convert::ToDouble(parts[1], System::Globalization::CultureInfo::InvariantCulture);
+                    if (payment > currentAmount) {
+                        MessageBox::Show("You cannot add a payment greater than the remaining debt amount.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+                        return;
+                    }
+                    debtFound = true;
+                    break;
+                }
+            }
+            if (!debtFound) {
+                MessageBox::Show("Debt not found in the records.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+                return;
+            }
+	    
             String^ newPaymentDetail = debtName + "," + paymentDate + "," + paymentAmount;
             System::IO::File::AppendAllText("details_they.csv", newPaymentDetail + "\n");
 
@@ -654,9 +694,15 @@ namespace DebtManagerApp {
             for each (String ^ line in lines)
             {
                 array<String^>^ parts = line->Split(',');
-                if (parts->Length == 2)
-                {
-                    debtsTotalAmount += Convert::ToDouble(parts[1], System::Globalization::CultureInfo::InvariantCulture);
+                if (parts->Length >= 2) {
+                    double amount;
+                    if (Double::TryParse(parts[1], System::Globalization::NumberStyles::Float, System::Globalization::CultureInfo::InvariantCulture, amount)) {
+                        debtsTotalAmount += amount;
+                    }
+                    else {
+                        MessageBox::Show("Invalid amount format in file. Please check the file.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+                        return;
+                    }
                 }
             }
         }
@@ -665,7 +711,7 @@ namespace DebtManagerApp {
             MessageBox::Show("Error updating total amount: " + ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
         }
 
-        AllDebtsAmount1->Text = "Total debts amount:\n\n" + debtsTotalAmount.ToString(System::Globalization::CultureInfo::InvariantCulture);
+        AllDebtsAmount1->Text = "Total debts amount:\n\n" + debtsTotalAmount.ToString("F2", System::Globalization::CultureInfo::InvariantCulture);
     }
 };
 }
